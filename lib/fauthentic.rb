@@ -1,6 +1,7 @@
+require 'fauthentic/version'
 require 'openssl'
 
-class Fauthentic
+module Fauthentic
   DEFAULT_OPTIONS = {
     country: "US",
     state: nil,
@@ -13,7 +14,7 @@ class Fauthentic
 
   SslData = Struct.new(:cert, :key)
 
-  def self.generate(opts = {})
+  def generate(opts = {})
     options = DEFAULT_OPTIONS.merge(opts)
 
     key = OpenSSL::PKey::RSA.new(2048)
@@ -46,15 +47,15 @@ class Fauthentic
     return SslData.new(cert, key)
   end
 
-  def self.parse_cert(string)
+  def parse_cert(string)
     OpenSSL::X509::Certificate.new(string)
   end
 
-  def self.parse_key(string, pass=nil)
+  def parse_key(string, pass=nil)
     OpenSSL::PKey.read(string, pass)
   end
 
-  def self.extract_subject(cert)
+  def extract_subject(cert)
     Hash[cert.subject.to_a.map{|i| [i[0].to_sym, i[1]]}]
   end
 end
