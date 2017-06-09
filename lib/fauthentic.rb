@@ -14,7 +14,7 @@ module Fauthentic
 
   SslData = Struct.new(:cert, :key)
 
-  def generate(opts = {})
+  def self.generate(opts = {})
     options = DEFAULT_OPTIONS.merge(opts)
 
     key = OpenSSL::PKey::RSA.new(2048)
@@ -47,15 +47,15 @@ module Fauthentic
     return SslData.new(cert, key)
   end
 
-  def parse_cert(string)
+  def self.parse_cert(string)
     OpenSSL::X509::Certificate.new(string)
   end
 
-  def parse_key(string, pass=nil)
+  def self.parse_key(string, pass=nil)
     OpenSSL::PKey.read(string, pass)
   end
 
-  def extract_subject(cert)
+  def self.extract_subject(cert)
     Hash[cert.subject.to_a.map{|i| [i[0].to_sym, i[1]]}]
   end
 end
