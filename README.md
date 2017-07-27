@@ -38,6 +38,7 @@ opts = {
   org_unit: "Test",             # "Test"
   email: "totally-secure-team@my.domain.com", # nil
   expire_in_days: 365           # 30
+  serial: 1                     # Current time in billionths of a second + random
 }
 ssl = Fauthentic.generate(opts)
 cert_string = ssl.cert.to_pem
