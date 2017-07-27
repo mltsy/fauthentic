@@ -9,6 +9,12 @@ describe Fauthentic do
         expect(ssl.cert.class).to eq(OpenSSL::X509::Certificate)
         expect(ssl.cert.check_private_key(ssl.key)).to be(true)
       end
+
+      it "generates a new serial number" do
+        prior_serial = Fauthentic.generate_serial
+        ssl = Fauthentic.generate
+        expect(ssl.cert.serial.to_i).to be > prior_serial
+      end
     end
 
     context "with all the arguments" do
@@ -20,7 +26,8 @@ describe Fauthentic do
           org_unit: 'MyUnit',
           common_name: 'my.domain.com',
           email: 'my@email.com',
-          expire_in_days: 42
+          expire_in_days: 42,
+          serial: 1
         }
       end
 
@@ -36,6 +43,7 @@ describe Fauthentic do
           emailAddress: 'my@email.com'
         ))
         expect(ssl.cert.not_after).to be <= Time.now + 42 * 24 * 60 * 60
+        expect(ssl.cert.serial.to_i).to be 1
       end
     end
   end

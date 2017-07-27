@@ -5,7 +5,7 @@ module Fauthentic
   DEFAULT_OPTIONS = {
     country: "US",
     state: nil,
-    org: "Fauxthentic",
+    org: "Fauthentic",
     org_unit: "Test",
     common_name: "test.example.com",
     email: nil,
@@ -32,7 +32,7 @@ module Fauthentic
     cert.not_before = Time.now
     cert.not_after = Time.now + options[:expire_in_days] * 24 * 60 * 60
     cert.public_key = key.public_key
-    cert.serial = 0x0
+    cert.serial = options[:serial] || self.generate_serial
     cert.version = 2
 
     ef = OpenSSL::X509::ExtensionFactory.new
@@ -45,6 +45,10 @@ module Fauthentic
     cert.sign key, OpenSSL::Digest::SHA256.new
 
     return SslData.new(cert, key)
+  end
+
+  def self.generate_serial
+    (Time.now.to_f * 10**12).to_i + Random.rand(10000)
   end
 
   def self.parse_cert(string)
